@@ -1,0 +1,54 @@
+---
+title: "prep"
+format: html
+---
+
+```{r}
+library(readxl)
+library(tidyverse)
+
+```
+
+# df1
+```{r}
+df1 <- read_excel("../data/BD_fields.xlsx",
+                  sheet = 1)
+
+df1
+```
+
+```{r}
+df1_w <- df1 %>%
+  janitor::clean_names() %>%
+  mutate(site = "a",
+         sampleid = 1:nrow(.)) %>%
+  dplyr::select(site,
+                sampleid,
+                mel_s, pb_s, het_s,
+                #cist_v = cisto_v, 
+                #cists_i = cistos_i,
+                sum_s = soma_s,
+                mel_r, pb_r, het_r, 
+                sum_r = soma_r,
+                sum_t = soma_t, 
+                eggs_r = ovos_r,
+                #heigth_cm = height,
+                yield_kgha = prod,
+                b = buf100_g,
+                g = buf100_g,
+                nir = buf100_nir,
+                r = buf100_r,
+                re = buf100_rg
+                ) %>%
+  filter(!(sampleid %in% c(28,41)))
+
+df1_w %>%
+  filter(mel_s > 200)
+```
+
+# Exporting  
+```{r}
+write_csv(df1_w,
+          "../data/nematode_rs.csv")
+```
+
